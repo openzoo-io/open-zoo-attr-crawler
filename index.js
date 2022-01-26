@@ -78,7 +78,6 @@ class TokenFetcher {
           {
             _nftItemId: token._nftItemId,
             contractAddress: token.contractAddress,
-            tokenID: token.tokenID,
           },
           { $setOnInsert: token },
           { upsert: true }
