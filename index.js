@@ -17,17 +17,12 @@ const cliProgress = require("cli-progress");
 const COLLECTION_ADDRESS =
   options.collectionAddress || process.env.COLLECTION_ADDRESS;
 
-function chunkArray(myArray, chunk_size) {
-  var index = 0;
-  var arrayLength = myArray.length;
-  var tempArray = [];
+function chunkArray(arr, chunkSize) {
+  var arrays = [];
 
-  for (index = 0; index < arrayLength; index += chunk_size) {
-    myChunk = myArray.slice(index, index + chunk_size);
-    tempArray.push(myChunk);
-  }
+  while (arr.length > 0) arrays.push(arr.splice(0, chunkSize));
 
-  return tempArray;
+  return arrays;
 }
 
 function randomInt(min, max, exclude = -1) {
@@ -67,6 +62,7 @@ class TokenFetcher {
           _nftItemId: token._id,
           contractAddress: COLLECTION_ADDRESS,
           tokenURI: token.tokenURI,
+          tokenID: token.tokenID,
         }));
       })
       .catch(console.log);
@@ -82,6 +78,7 @@ class TokenFetcher {
           {
             _nftItemId: token._nftItemId,
             contractAddress: token.contractAddress,
+            tokenID: token.tokenID,
           },
           { $setOnInsert: token },
           { upsert: true }
@@ -135,7 +132,6 @@ class AttributeFetcher {
       previousEndpointIndex
     );
     const endpoint = AttributeFetcher.ENDPOINTS[endPointIndex];
-
     const apiURL = record.tokenURI.replace(
       "https://openzoo.mypinata.cloud",
       endpoint
@@ -151,26 +147,20 @@ class AttributeFetcher {
         { $set: response.data }
       );
       this.bar.update(++this.barProgress, { url: apiURL });
-      return new Promise((res) => {
-        return res();
-      });
+      return Promise.resolve();
     } catch (error) {
-      this.fetch(record, endPointIndex);
+      return this.fetch(record, endPointIndex);
     }
   }
 
   async fetchAllAndSave() {
-    this.bar.start(await this._getTotalEmptyRecordCount(), 0);
+    const recordCount = await this._getTotalEmptyRecordCount();
+    this.bar.start(recordCount, 0);
 
     const records = await this._getRecordsWithoutAttributes();
     const chunks = chunkArray(records, process.env.ASYNC_CHUNK_COUNT);
-
-    for (const chunk of chunks) {
-      const tasks = [];
-      for (const record of chunk) {
-        tasks.push(this.fetch(record));
-      }
-
+    for (let i = 0; i < chunks.length; i++) {
+      const tasks = chunks[i].map((record) => this.fetch(record));
       await Promise.all(tasks);
     }
 
