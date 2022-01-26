@@ -1,0 +1,22 @@
+{
+  "name": "oz-attr-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.3",
+    "axios": "^0.24.0",
+    "axios-retry": "^3.2.4",
+    "cli": "^1.0.1",
+    "cli-progress": "^3.10.0",
+    "dotenv": "^12.0.3",
+    "log4js": "^6.4.0",
+    "mongoose": "^6.1.6",
+    "tracer": "^1.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
