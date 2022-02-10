@@ -1,4 +1,4 @@
-require("dotenv").config('.env');
+require("dotenv").config({path:'.env'});
 const { default: axios } = require("axios");
 const mongoose = require("mongoose");
 const NFTAttributeModel = require("./model/nftAttribute");
