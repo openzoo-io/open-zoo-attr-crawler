@@ -1,4 +1,4 @@
-require("dotenv").config({path:'.env'});
+require("dotenv").config({path:'/root/open-zoo-attr-crawler/.env'});
 const { default: axios } = require("axios");
 const mongoose = require("mongoose");
 const NFTAttributeModel = require("./model/nftAttribute");
