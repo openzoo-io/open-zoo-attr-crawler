@@ -124,8 +124,8 @@ const isMainnet = CHAIN === 888;
 const getContract = async (address, abi) => {
   const provider = new ethers.providers.StaticJsonRpcProvider(
     isMainnet
-      ? "https://rpc.zookeeper.finance/"
-      : "https://rpc.zookeeper.finance/testnet",
+      ? "https://gwan-ssl.wandevs.org:56891"
+      : "https://gwan-ssl.wandevs.org:46891",
     CHAIN
   );
   provider.pollingInterval = 10 * 1000;
